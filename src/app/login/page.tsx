@@ -17,6 +17,15 @@ export default function LoginPage() {
   const [responseMessage, setResponseMessage] = useState(""); // Message to show user
   const [redirecting, setRedirecting] = useState(false); // To manage the redirecting state
 
+  // Check for the query parameter "message" in the URL
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const message = queryParams.get("message");
+    if (message) {
+      setResponseMessage(message); // Set the response message from query params
+    }
+  }, []);
+
   const onLogin = async () => {
     try {
       setLoading(true);
@@ -54,6 +63,11 @@ export default function LoginPage() {
       <h1>{loading ? "Processing" : "Login"}</h1>
       <hr />
 
+      {/* Show the message if present
+      {responseMessage && (
+        <p className="text-center text-lg mt-4 text-red-500">{responseMessage}</p>
+      )} */}
+
       {/* Email Field */}
       <label htmlFor="email">Email</label>
       <input
@@ -88,14 +102,17 @@ export default function LoginPage() {
       {/* Login Button */}
       <button
         onClick={onLogin}
-        className={`p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 ${
-          buttonDisabled
+        className={`p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 ${buttonDisabled
             ? "bg-gray-300 cursor-not-allowed"
             : "bg-blue-500 hover:bg-blue-600 text-white"
-        }`}
+          }`}
         disabled={buttonDisabled} // Disables button if buttonDisabled is true
       >
-        {loading ? "Logging in..." : buttonDisabled ? "Please fill all fields" : "Login"}
+        {loading
+          ? "Logging in..."
+          : buttonDisabled
+            ? "Please fill all fields"
+            : "Login"}
       </button>
 
       {/* Redirecting Message */}
