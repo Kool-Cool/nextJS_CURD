@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     try {
         // Parse the incoming request body
         const reqBody = await request.json();
-        console.log("THis is from routes !!!");
+        console.log("This is from signUp routes !!!");
         console.log(reqBody);
 
         const { username, email, password } = reqBody;
