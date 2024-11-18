@@ -12,19 +12,27 @@ export default function SignupPage() {
     password: "",
     username: "",
   });
-  const [buttonDisabled, setButtonDisabled] = React.useState(true); // Initially disabled
+  const [buttonDisabled, setButtonDisabled] = React.useState(true);
   const [loading, setLoading] = React.useState(false);
-  const [passwordVisible, setPasswordVisible] = React.useState(false); // State for password visibility
+  const [passwordVisible, setPasswordVisible] = React.useState(false);
+  const [responseMessage, setResponseMessage] = React.useState(""); // To hold the response message
 
   const onSignup = async () => {
     try {
       setLoading(true);
       const response = await axios.post("/api/users/signup", user);
-      console.log("This is from SignUp Page !!!");
       console.log("Signup success", response.data);
-      router.push("/login");
+
+      // If the signup is successful, show success message
+      setResponseMessage("Signup successful! Redirecting to login...");
+
+      // Redirect after a 3-second delay
+      setTimeout(() => {
+        router.push("/login");
+      }, 3000);
     } catch (error: any) {
       console.log("Signup failed", error.message);
+      setResponseMessage(`Signup failed: ${error.message}`);
       toast.error(error.message);
     } finally {
       setLoading(false);
@@ -70,7 +78,7 @@ export default function SignupPage() {
         <input
           className="p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-gray-600 text-black"
           id="password"
-          type={passwordVisible ? "text" : "password"} // Toggle the password visibility
+          type={passwordVisible ? "text" : "password"}
           value={user.password}
           onChange={(e) => setUser({ ...user, password: e.target.value })}
           placeholder="Password"
@@ -78,9 +86,9 @@ export default function SignupPage() {
         <button
           type="button"
           className="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-500"
-          onClick={() => setPasswordVisible((prev) => !prev)} // Toggle password visibility on click
+          onClick={() => setPasswordVisible((prev) => !prev)}
         >
-          {passwordVisible ? "Hide" : "Show"} {/* Change button text based on visibility */}
+          {passwordVisible ? "Hide" : "Show"}
         </button>
       </div>
       <button
@@ -90,10 +98,13 @@ export default function SignupPage() {
             ? "bg-gray-300 cursor-not-allowed"
             : "bg-blue-500 hover:bg-blue-600 text-white"
         }`}
-        disabled={buttonDisabled} // Disables button if buttonDisabled is true
+        disabled={buttonDisabled}
       >
         {buttonDisabled ? "Please fill all fields" : "Signup"}
       </button>
+      {responseMessage && (
+        <p className="text-center text-lg mt-4">{responseMessage}</p>
+      )}
       <Link href="/login">Visit login page</Link>
     </div>
   );

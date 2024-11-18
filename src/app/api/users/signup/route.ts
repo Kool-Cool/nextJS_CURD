@@ -6,7 +6,8 @@ import bcryptjs from "bcryptjs";
 
 
 export async function POST(request: NextRequest) {
-    connect();
+    await connect();
+    // console.log(connect());
     try {
         // Parse the incoming request body
         const reqBody = await request.json();
